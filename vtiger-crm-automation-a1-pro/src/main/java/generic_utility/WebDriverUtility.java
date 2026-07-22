@@ -1,87 +1,553 @@
 package generic_utility;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.function.Function;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.io.Files;
+
+/**
+ * This class contains reusable WebDriver utility methods such as window
+ * management, waits, dropdown selections, mouse and keyboard interactions. It
+ * also includes additional utilities such as alerts, scrolling, screenshot, JS
+ * execution, drag-drop, sliders, and more.
+ * 
+ * @version 2.0
+ * 
+ * 
+ * @author Piyush Baldaniya
+ */
 public class WebDriverUtility {
+
 	WebDriver driver;
 	Actions act;
 	WebDriverWait wait;
 
-//	this points to the current class object
 	public WebDriverUtility(WebDriver driver) {
 		this.driver = driver;
-		act = new Actions(driver);
-		wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
+		this.act = new Actions(driver);
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	}
+	
+	/**
+	 * Maximizes the browser window.
+	 */
+	public void maximizeWindow() {
+		driver.manage().window().maximize();
 	}
 
-	public void switchToFrame(int index) {
-		driver.switchTo().frame(index);
+	/**
+	 * Makes the browser fullscreen.
+	 */
+	public void fullscreenWindow() {
+		driver.manage().window().fullscreen();
 	}
 
-	public void switchToFrame(String idOrName) {
-		driver.switchTo().frame(idOrName);
+	// ===== Basic Waits =====
+
+	/**
+	 * Applies implicit wait for the page to load.
+	 */
+	public void waitForPageLoad() {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
 	}
 
-	public void switchToFrame(WebElement element) {
-		driver.switchTo().frame(element);
+	/**
+	 * Waits explicitly until the element is visible.
+	 * 
+	 * @param element        WebElement to wait for
+	 * @param timeOutSeconds Max wait time in seconds
+	 */
+	public void waitForElementVisible(WebElement element) {
+		wait.until(ExpectedConditions.visibilityOf(element));
 	}
 
-	public void hover(WebElement element) {
-
-		act.moveToElement(element).build().perform();
-	}
-
-	public void rightClick(WebElement element) {
-		act.moveToElement(element).build().perform();
+	/**
+	 * Waits explicitly until the element is clickable.
+	 * 
+	 * @param element        WebElement to wait for
+	 * @param timeOutSeconds Max wait time in seconds
+	 */
+	public WebElement waitForElementClickable(WebElement element) {
+		 return wait.until(ExpectedConditions.elementToBeClickable(element));
 	}
 
 	public void waitAndClick(WebElement element) {
-		wait.until(ExpectedConditions.elementToBeClickable(element));
-		element.click();
+		waitForElementClickable(element).click();
 	}
 
-	public void waitForEleToVisibleAndClick(WebElement element) {
-		wait.until(ExpectedConditions.visibilityOf(element));
-		element.click();
+	/**
+	 * Waits explicitly until an element is invisible.
+	 * 
+	 * @param element        WebElement to wait for invisibility
+	 * @param timeOutSeconds Max wait time in seconds
+	 */
+	public void waitForElementInvisibility(WebElement element) {
+		wait.until(ExpectedConditions.invisibilityOf(element));
 	}
 
+	/**
+	 * Waits explicitly for specific text to be present in an element.
+	 * 
+	 * @param element        WebElement
+	 * @param text           Expected text
+	 * @param timeOutSeconds Max wait time in seconds
+	 */
+	public void waitForTextInElement(WebElement element, String text) {
+		wait.until(ExpectedConditions.textToBePresentInElement(element, text));
+	}
+
+	/**
+	 * Waits for the page title to contain given text.
+	 * 
+	 * @param titlePart      Partial or full title text
+	 * @param timeOutSeconds Max wait time in seconds
+	 */
+	public void waitForTitleContains(String titlePart) {
+		wait.until(ExpectedConditions.titleContains(titlePart));
+	}
+
+	/**
+	 * Waits for the URL to contain given text.
+	 * 
+	 * @param urlFraction    Partial or full URL text
+	 * @param timeOutSeconds Max wait time in seconds
+	 */
+	public void waitForUrlContains(String urlFraction, int timeOutSeconds) {
+		wait.until(ExpectedConditions.urlContains(urlFraction));
+	}
+
+	// ===== Dropdown Select Methods =====
+
+	/**
+	 * Selects dropdown option by index.
+	 * 
+	 * @param element The dropdown WebElement
+	 * @param index   Index of the option
+	 */
 	public void select(WebElement element, int index) {
 		Select sel = new Select(element);
 		sel.selectByIndex(index);
 	}
 
-	public void select(WebElement element, String visibleText) {
-		Select sel = new Select(element);
-		sel.selectByVisibleText(visibleText);
-	}
-
-	public void select(String value, WebElement element) {
+	/**
+	 * Selects dropdown option by value.
+	 * 
+	 * @param element The dropdown WebElement
+	 * @param value   Value of the option
+	 */
+	public void select(WebElement element, String value) {
 		Select sel = new Select(element);
 		sel.selectByValue(value);
 	}
 
-	public void switchToWinByTitle(String partialTitle) {
-
-		
-		
-		
-		
-		
-		
-		
-		
+	/**
+	 * Selects dropdown option by visible text.
+	 * 
+	 * @param visibleText Text visible in dropdown
+	 * @param element     The dropdown WebElement
+	 */
+	public void select(String visibleText, WebElement element) {
+		Select sel = new Select(element);
+		sel.selectByVisibleText(visibleText);
 	}
 
-	public void switchToWinByUrl(String partialUrl) {
+	// ===== Basic Mouse Actions =====
 
+	/**
+	 * Performs mouse hover on the given element.
+	 * 
+	 * @param element The target WebElement
+	 */
+	public void hover(WebElement element) {
+		act.moveToElement(element).build().perform();
 	}
 
+	/**
+	 * Performs right-click on the given element.
+	 * 
+	 * @param element The target WebElement
+	 */
+	public void rightClick(WebElement element) {
+		act.contextClick(element).build().perform();
+	}
+
+
+	// ===== Scroll Methods =====
+
+	/**
+	 * Scrolls the page to bring the element into view.
+	 * 
+	 * @param element WebElement to scroll into view
+	 */
+	public void scrollIntoView(WebElement element) {
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+	}
+
+	/**
+	 * Scrolls by the given X and Y offset.
+	 * 
+	 * @param x Horizontal scroll
+	 * @param y Vertical scroll
+	 */
+	public void scrollByOffset(int x, int y) {
+		((JavascriptExecutor) driver).executeScript("window.scrollBy(" + x + "," + y + ")");
+	}
+
+	// ===== Basic Element Interactions =====
+
+	/**
+	 * Clears text of an input element.
+	 * 
+	 * @param element WebElement input
+	 */
+	public void clearText(WebElement element) {
+		element.clear();
+	}
+
+
+
+	/**
+	 * Sends keys to an element after clearing existing text.
+	 * 
+	 * @param element WebElement input
+	 * @param text    Text to send
+	 */
+	public void clearAndSendKeys(WebElement element, String text) {
+		element.clear();
+		element.sendKeys(text);
+	}
+
+	/**
+	 * Sends keyboard key to element.
+	 * 
+	 * @param element WebElement input or focusable
+	 * @param key     Keyboard key (Keys.ENTER, Keys.TAB, etc)
+	 */
+	public void sendKeyboardKey(WebElement element, Keys key) {
+		element.sendKeys(key);
+	}
+
+	// ===== Browser Navigation Utilities =====
+
+	/**
+	 * Navigates back in browser history.
+	 */
+	public void navigateBack() {
+		driver.navigate().back();
+	}
+
+	/**
+	 * Navigates forward in browser history.
+	 */
+	public void navigateForward() {
+		driver.navigate().forward();
+	}
+
+	/**
+	 * Refreshes the current page.
+	 */
+	public void refreshPage() {
+		driver.navigate().refresh();
+	}
+
+	// ===== Checkbox and Radio Button Handling =====
+
+	/**
+	 * Checks a checkbox if not already checked.
+	 * 
+	 * @param checkbox The checkbox WebElement
+	 */
+	public void checkCheckbox(WebElement checkbox) {
+		if (!checkbox.isSelected()) {
+			checkbox.click();
+		}
+	}
+
+	/**
+	 * Unchecks a checkbox if it is currently checked.
+	 * 
+	 * @param checkbox The checkbox WebElement
+	 */
+	public void uncheckCheckbox(WebElement checkbox) {
+		if (checkbox.isSelected()) {
+			checkbox.click();
+		}
+	}
+
+	/**
+	 * Checks if a checkbox is selected.
+	 * 
+	 * @param checkbox The checkbox WebElement
+	 * @return true if checked, false otherwise
+	 */
+	public boolean isCheckboxChecked(WebElement checkbox) {
+		return checkbox.isSelected();
+	}
+
+	/**
+	 * Selects a radio button if not already selected.
+	 * 
+	 * @param radioButton The radio button WebElement
+	 */
+	public void selectRadioButton(WebElement radioButton) {
+		if (!radioButton.isSelected()) {
+			radioButton.click();
+		}
+	}
+
+	/**
+	 * Checks if a radio button is selected.
+	 * 
+	 * @param radioButton The radio button WebElement
+	 * @return true if selected, false otherwise
+	 */
+	public boolean isRadioButtonSelected(WebElement radioButton) {
+		return radioButton.isSelected();
+	}
+
+	// ===== Keyboard Shortcuts =====
+
+	/**
+	 * Presses the Enter key on the specified element.
+	 * 
+	 * @param element WebElement to send Enter key
+	 */
+	public void pressEnter(WebElement element) {
+		element.sendKeys(Keys.ENTER);
+	}
+
+	/**
+	 * Presses the Escape key on the specified element.
+	 * 
+	 * @param element WebElement to send Escape key
+	 */
+	public void pressEscape(WebElement element) {
+		element.sendKeys(Keys.ESCAPE);
+	}
+
+	/**
+	 * Presses the Tab key on the specified element.
+	 * 
+	 * @param element WebElement to send Tab key
+	 */
+	public void pressTab(WebElement element) {
+		element.sendKeys(Keys.TAB);
+	}
+
+	/**
+	 * Presses Ctrl + A (Select All) on the specified element.
+	 * 
+	 * @param element WebElement to send Ctrl + A
+	 */
+	public void pressCtrlA(WebElement element) {
+		element.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+	}
+
+	/**
+	 * Presses Ctrl + C (Copy) on the specified element.
+	 * 
+	 * @param element WebElement to send Ctrl + C
+	 */
+	public void pressCtrlC(WebElement element) {
+		element.sendKeys(Keys.chord(Keys.CONTROL, "c"));
+	}
+
+	/**
+	 * Presses Ctrl + V (Paste) on the specified element.
+	 * 
+	 * @param element WebElement to send Ctrl + V
+	 */
+	public void pressCtrlV(WebElement element) {
+		element.sendKeys(Keys.chord(Keys.CONTROL, "v"));
+	}
+
+	// ===== Screenshot Methods =====
+
+	/**
+	 * Takes screenshot and stores with given name.
+	 * 
+	 * @param screenshotName Name * @param screenshotName Name
+	 * @throws IOException if file write fails
+	 */
+	public void takeScreenshot(String screenshotName) throws IOException {
+		File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		File dest = new File("./screenshots/" + screenshotName + ".png");
+		Files.copy(src, dest);
+	}
+
+	/**
+	 * Takes screenshot with timestamp appended to the name.
+	 * 
+	 * @param baseName Base name of the screenshot file
+	 * @throws IOException if file write fails
+	 */
+	public void takeScreenshotWithTimestamp(String baseName) throws IOException {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HHmmss_ddMMyyyy");
+		LocalDateTime now = LocalDateTime.now();
+		String timestamp = dtf.format(now);
+		takeScreenshot(baseName + "_" + timestamp);
+	}
+
+// ===== Alert Handling =====
+
+	/**
+	 * Accepts alert popup.
+	 */
+	public void acceptAlert() {
+		driver.switchTo().alert().accept();
+	}
+
+	/**
+	 * Dismisses alert popup.
+	 */
+	public void dismissAlert() {
+		driver.switchTo().alert().dismiss();
+	}
+
+	/**
+	 * Returns alert text.
+	 * 
+	 * @return Alert text
+	 */
+	public String getAlertText() {
+		return driver.switchTo().alert().getText();
+	}
+
+	/**
+	 * Sends text to alert prompt.
+	 * 
+	 * @param text Text to send
+	 */
+	public void sendTextToAlert(String text) {
+		driver.switchTo().alert().sendKeys(text);
+	}
+
+// ===== JavaScript Executor Methods =====
+
+	/**
+	 * Executes JavaScript to click an element.
+	 * 
+	 * @param element WebElement to click
+	 */
+	public void jsClick(WebElement element) {
+		((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+	}
+
+	/**
+	 * Executes JavaScript to set value of an element.
+	 * 
+	 * @param element WebElement to set value
+	 * @param value   Value to set
+	 */
+	public void jsSetValue(WebElement element, String value) {
+		((JavascriptExecutor) driver).executeScript("arguments[0].value='" + value + "';", element);
+	}
+
+	/**
+	 * Executes JavaScript to get value of an element.
+	 * 
+	 * @param element WebElement to get value
+	 * @return Value as String
+	 */
+	public String jsGetValue(WebElement element) {
+		return (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].value;", element);
+	}
+
+	/**
+	 * Scrolls the page down to the bottom using JavaScript.
+	 */
+	public void jsScrollToBottom() {
+		((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+	}
+
+	/**
+	 * Scrolls the page up to the top using JavaScript.
+	 */
+	public void jsScrollToTop() {
+		((JavascriptExecutor) driver).executeScript("window.scrollTo(0, 0);");
+	}
+
+// ===== Window and Tab Handling =====
+
+	/**
+	 * Switches to a window/tab by title.
+	 * 
+	 * @param partialWindowTitle Partial or full window title
+	 */
+	public void switchToWindowByTitle(String partialWindowTitle) {
+		Set<String> windowHandles = driver.getWindowHandles();
+		for (String i : windowHandles) {
+			driver.switchTo().window(i);
+			if (driver.getTitle().contains(partialWindowTitle)) {
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Switches to the window/tab by URL.
+	 * 
+	 * @param partialUrl Partial or full URL
+	 */
+
+	public void switchToWindowByUrl(String partialURL) {
+		Set<String> CIDs = driver.getWindowHandles(); // returns Set<String> of multiple unique session ids
+
+		for (String i : CIDs) {
+			driver.switchTo().window(i);
+			String curl = driver.getCurrentUrl();
+			if (curl.contains(partialURL)) {
+				break;
+			}
+		}
+	}
+	
+
+	/**
+	 * Switches to the parent window.
+	 * 
+	 * @param parentWindowHandle Window handle of the parent
+	 */
+	public void switchToParentWindow(String parentWindowHandle) {
+		driver.switchTo().window(parentWindowHandle);
+	}
+
+	/**
+	 * Closes all windows except parent.
+	 * 
+	 * @param parentWindowHandle Window handle of the parent
+	 */
+	public void closeAllChildWindows(String parentWindowHandle) {
+		Set<String> windowHandles = driver.getWindowHandles();
+		for (String handle : windowHandles) {
+			if (!handle.equals(parentWindowHandle)) {
+				driver.switchTo().window(handle);
+				driver.close();
+			}
+		}
+		driver.switchTo().window(parentWindowHandle);
+	}
 }

@@ -1,4 +1,4 @@
-package crm.organization;
+package crm.opportunity;
 
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -61,6 +61,8 @@ public class CreateOrgTest {
 		WebElement pwd = driver.findElement(By.name("user_password"));
 		WebElement loginButton = driver.findElement(By.id("submitButton"));
 
+		driver.navigate().refresh();
+		
 		un.sendKeys(username);
 		pwd.sendKeys(password);
 		loginButton.click();

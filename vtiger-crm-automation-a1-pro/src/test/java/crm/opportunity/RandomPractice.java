@@ -1,4 +1,4 @@
-package crm.organization;
+package crm.opportunity;
 
 public class RandomPractice {
 	public static void main(String[] args) {
