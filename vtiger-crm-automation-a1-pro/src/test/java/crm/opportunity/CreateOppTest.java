@@ -27,7 +27,7 @@ import object_repository.OpportunityPage;
  *   6. Save and verify
  *   7. Logout
  */
-public class CreateOpportunityPOMTest {
+public class CreateOppTest {
 
 	public static void main(String[] args) throws InterruptedException, IOException, ParseException {
 
@@ -103,7 +103,7 @@ public class CreateOpportunityPOMTest {
 		wdUtil.switchToWindowByUrl("Accounts");
 
 //		step 4: select an organization (click any partial link to vtiger)
-		driver.findElement(org.openqa.selenium.By.partialLinkText("vtiger")).click();
+		driver.findElement(org.openqa.selenium.By.partialLinkText("Accenture")).click();
 
 //		step 5: switch back to parent window
 		driver.switchTo().window(parentWindowHandle);

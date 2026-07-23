@@ -26,7 +26,7 @@ import object_repository.OrganizationPage;
  *   5. Save and verify
  *   6. Logout
  */
-public class CreateOrganizationPOMTest {
+public class CreateOrgTest {
 
 	public static void main(String[] args) throws InterruptedException, IOException, ParseException {
 

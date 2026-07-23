@@ -29,13 +29,13 @@ public class OpportunityPage {
 	@FindBy(id = "potential_no")
 	private WebElement potentialNo;
 
-	@FindBy(id = "amount")
+	@FindBy(name = "amount")
 	private WebElement amount;
 
-	@FindBy(id = "closingdate")
+	@FindBy(id = "jscal_field_closingdate")
 	private WebElement closingDate;
 
-	@FindBy(id = "related_to")
+	@FindBy(xpath = "//img[contains(@onclick, 'srcmodule=Potentials')]")
 	private WebElement relatedTo;
 
 	@FindBy(name = "opportunity_type")
