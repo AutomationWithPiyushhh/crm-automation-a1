@@ -29,7 +29,7 @@ public class ActivityPage {
 
 	// ===== Event Form Fields =====
 
-	@FindBy(id = "subject")
+	@FindBy(name = "subject")
 	private WebElement subject;
 
 	@FindBy(name = "activitytype")
@@ -38,7 +38,7 @@ public class ActivityPage {
 	@FindBy(name = "eventstatus")
 	private WebElement eventStatus;
 
-	@FindBy(id = "date_start")
+	@FindBy(id = "jscal_field_date_start")
 	private WebElement startDate;
 
 	@FindBy(id = "time_start")
