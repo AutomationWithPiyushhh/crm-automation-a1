@@ -1,4 +1,4 @@
-package pom_extra;
+package testng_dp_extra;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
