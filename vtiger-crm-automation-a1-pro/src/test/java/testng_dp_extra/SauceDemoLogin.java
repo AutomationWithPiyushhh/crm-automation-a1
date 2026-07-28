@@ -42,8 +42,8 @@ public class SauceDemoLogin {
 	}
 
 	@DataProvider
-	public String[][] getData() {
-		String[][] creds = new String[6][2];
+	public Object[][] getData() {
+		Object[][] creds = new Object[6][2];
 //      							row column
 //							num of row => num of execution
 //							num of col => num of parameters
