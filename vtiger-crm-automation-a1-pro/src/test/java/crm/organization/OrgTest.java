@@ -3,15 +3,20 @@ package crm.organization;
 import java.io.IOException;
 import java.time.Duration;
 
+import org.apache.poi.EncryptedDocumentException;
 import org.json.simple.parser.ParseException;
+import org.junit.experimental.theories.suppliers.TestedOn;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.Test;
 
+import base_utility.BaseClass;
 import generic_utility.FileUtility;
 import generic_utility.JavaUtility;
 import generic_utility.WebDriverUtility;
+import junit.framework.Assert;
 import object_repository.HomePage;
 import object_repository.LoginPage;
 import object_repository.OrganizationPage;
@@ -26,45 +31,14 @@ import object_repository.OrganizationPage;
  *   5. Save and verify
  *   6. Logout
  */
-public class CreateOrgTest {
+public class OrgTest extends BaseClass{
 
-	public static void main(String[] args) throws InterruptedException, IOException, ParseException {
-
-//		get the data from json file
-		FileUtility fUtil = new FileUtility();
-		String browser = fUtil.getDataFromJsonFile("bro");
-		String url = fUtil.getDataFromJsonFile("url");
-		String username = fUtil.getDataFromJsonFile("un");
-		String password = fUtil.getDataFromJsonFile("pwd");
+	@Test
+	public void createOrgTest() throws EncryptedDocumentException, IOException {
 
 //		get the data from Excel file
+		FileUtility fUtil = new FileUtility();
 		String orgName = fUtil.getDataFromExcelFile("org", 2, 0) + JavaUtility.generateRandomNumber();
-
-//		open browser
-		WebDriver driver = null;
-		if (browser.equals("chrome")) {
-			driver = new ChromeDriver();
-		} else if (browser.equals("edge")) {
-			driver = new EdgeDriver();
-		} else if (browser.equals("firefox")) {
-			driver = new FirefoxDriver();
-		} else {
-			driver = new ChromeDriver();
-		}
-
-		WebDriverUtility wdUtil = new WebDriverUtility(driver);
-		wdUtil.maximizeWindow();
-		wdUtil.waitForPageLoad();
-
-//		navigate to url & login
-		driver.get(url);
-		driver.navigate().refresh();
-
-//		========== POM: LoginPage ==========
-		LoginPage lp = new LoginPage(driver);
-		lp.getUsername().sendKeys(username);
-		lp.getPassword().sendKeys(password);
-		lp.getLoginButton().click();
 
 //		========== POM: HomePage ==========
 		HomePage hp = new HomePage(driver);
@@ -85,19 +59,6 @@ public class CreateOrgTest {
 
 //		verification
 		String actOrgName = op.getDetailViewOrganizationName().getText();
-		if (actOrgName.equals(orgName)) {
-			System.out.println("Organization created successfully! Name: " + actOrgName);
-		} else {
-			System.out.println("Organization creation failed! Expected: " + orgName + " | Actual: " + actOrgName);
-		}
-
-//		logout
-		wdUtil.hover(hp.getProfileIcon());
-		hp.getSignOutLink().click();
-
-//		close the browser
-		Thread.sleep(3000);
-		driver.quit();
-		System.out.println("Create Organization Test Completed.");
+		Assert.assertEquals(orgName, actOrgName);
 	}
 }

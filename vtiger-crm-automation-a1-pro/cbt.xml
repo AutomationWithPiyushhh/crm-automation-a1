@@ -1,0 +1,22 @@
+<suite parallel="tests" name="suite">
+	<test name="thread1">
+		<parameter name="bro" value="chrome" />		
+		<classes>
+			<class name="typesOfExecution.OrgTest" />
+		</classes>
+	</test>
+	
+	<test name="thread2">
+		<parameter name="bro" value="edge" />		
+		<classes>
+			<class name="typesOfExecution.OrgTest" />
+		</classes>
+	</test>
+	
+	<test name="thread3">
+		<parameter name="bro" value="firefox" />		
+		<classes>
+			<class name="typesOfExecution.OrgTest" />
+		</classes>
+	</test>
+</suite>

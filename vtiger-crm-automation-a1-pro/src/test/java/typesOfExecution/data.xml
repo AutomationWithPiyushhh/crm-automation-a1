@@ -1,0 +1,13 @@
+<suite name="suite">
+	<test name="test">
+	
+		<parameter name="bro" value="edge" />
+		<parameter name="url" value="https://localhost:8888" />
+		<parameter name="un" value="admin" />
+		<parameter name="pwd" value="manager" />
+		
+		<classes>
+			<class name="typesOfExecution.OrgTest" />
+		</classes>
+	</test>
+</suite>
