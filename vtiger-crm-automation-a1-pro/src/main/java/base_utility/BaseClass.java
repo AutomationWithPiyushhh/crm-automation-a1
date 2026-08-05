@@ -9,8 +9,14 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
+
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.aventstack.extentreports.reporter.configuration.Theme;
 
 import generic_utility.FileUtility;
 import generic_utility.WebDriverUtility;
@@ -20,6 +26,27 @@ import object_repository.LoginPage;
 public class BaseClass {
 
 	public WebDriver driver = null;
+	public ExtentReports report;
+
+	@BeforeSuite
+	public void repConfig() {
+//		report configuration
+//		. means project level
+		
+		long time = System.currentTimeMillis();
+		
+		ExtentSparkReporter spark = new ExtentSparkReporter("./ad_reports/"+time+".html");
+		spark.config().setDocumentTitle("sauce demo login");
+		spark.config().setReportName("login report");
+		spark.config().setTheme(Theme.DARK);
+
+		report = new ExtentReports();
+		report.attachReporter(spark);
+		report.setSystemInfo("ATE", "Manisha");
+		report.setSystemInfo("Browser", "edge");
+		report.setSystemInfo("Window", "11");
+
+	}
 
 	@BeforeClass
 	public void setUp() throws IOException, ParseException {
@@ -75,6 +102,13 @@ public class BaseClass {
 //		close the browser
 		driver.quit();
 		System.out.println("Create Organization Test Completed.");
+	}
+
+	
+	@AfterSuite
+	public void repBackup() {
+//		report backup
+		report.flush();
 	}
 
 }

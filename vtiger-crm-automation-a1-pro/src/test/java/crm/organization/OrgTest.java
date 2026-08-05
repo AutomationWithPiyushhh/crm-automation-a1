@@ -1,64 +1,72 @@
 package crm.organization;
 
 import java.io.IOException;
-import java.time.Duration;
 
 import org.apache.poi.EncryptedDocumentException;
-import org.json.simple.parser.ParseException;
-import org.junit.experimental.theories.suppliers.TestedOn;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 
 import base_utility.BaseClass;
 import generic_utility.FileUtility;
 import generic_utility.JavaUtility;
-import generic_utility.WebDriverUtility;
-import junit.framework.Assert;
 import object_repository.HomePage;
-import object_repository.LoginPage;
 import object_repository.OrganizationPage;
 
-/**
- * Test Script: Create Organization Test using POM design pattern.
- * Steps:
- *   1. Login to VTiger CRM
- *   2. Navigate to Organizations module
- *   3. Click Create Organization
- *   4. Fill in the organization form (name, phone, email, website)
- *   5. Save and verify
- *   6. Logout
- */
-public class OrgTest extends BaseClass{
+public class OrgTest extends BaseClass {
 
 	@Test
 	public void createOrgTest() throws EncryptedDocumentException, IOException {
 
-//		get the data from Excel file
-		FileUtility fUtil = new FileUtility();
-		String orgName = fUtil.getDataFromExcelFile("org", 2, 0) + JavaUtility.generateRandomNumber();
+		ExtentTest test = report.createTest("Create Organization Test");
 
-//		========== POM: HomePage ==========
+		test.log(Status.INFO, "========== Test Execution Started ==========");
+
+		// Read data from Excel
+		FileUtility fUtil = new FileUtility();
+		String orgName = fUtil.getDataFromExcelFile("org", 2, 0)
+				+ JavaUtility.generateRandomNumber();
+
+		test.log(Status.INFO, "Organization Name Generated : " + orgName);
+
+		// Home Page
 		HomePage hp = new HomePage(driver);
+		test.log(Status.INFO, "Navigating to Organizations module");
 		hp.getOrganizationsLink().click();
 
-//		========== POM: OrganizationPage ==========
+		// Organization Page
 		OrganizationPage op = new OrganizationPage(driver);
+
+		test.log(Status.INFO, "Clicking Create Organization button");
 		op.getCreateOrganizationButton().click();
 
-//		fill the Create Organization form
+		// Fill Organization Details
+		test.log(Status.INFO, "Entering Organization Details");
+
 		op.getOrganizationName().sendKeys(orgName);
 		op.getPhone().sendKeys("9876543210");
 		op.getEmail().sendKeys("testorg@vtiger.com");
 		op.getWebsite().sendKeys("www.testorg.com");
 
-//		save the record
+		test.log(Status.INFO, "Organization details entered successfully");
+
+		// Save
+		test.log(Status.INFO, "Saving the organization");
 		op.getSaveButton().click();
 
-//		verification
+		// Verification
+		test.log(Status.INFO, "Verifying created organization");
+
 		String actOrgName = op.getDetailViewOrganizationName().getText();
-		Assert.assertEquals(orgName, actOrgName);
+
+		Assert.assertEquals(actOrgName, orgName);
+
+		test.log(Status.PASS, "Organization created successfully");
+		test.log(Status.PASS, "Expected Organization : " + orgName);
+		test.log(Status.PASS, "Actual Organization   : " + actOrgName);
+
+		test.log(Status.INFO, "========== Test Execution Completed ==========");
 	}
 }
