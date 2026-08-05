@@ -39,4 +39,10 @@ public class LoginPage {
 	public WebElement getLoginButton() {
 		return loginButton;
 	}
+	
+	public void login(String un, String pwd) {
+		username.sendKeys(un);
+		password.sendKeys(pwd);
+		loginButton.click();
+	}
 }

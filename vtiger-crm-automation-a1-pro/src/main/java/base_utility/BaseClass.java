@@ -83,9 +83,10 @@ public class BaseClass {
 
 //		========== POM: LoginPage ==========
 		LoginPage lp = new LoginPage(driver);
-		lp.getUsername().sendKeys(username);
-		lp.getPassword().sendKeys(password);
-		lp.getLoginButton().click();
+//		lp.getUsername().sendKeys(username);
+//		lp.getPassword().sendKeys(password);
+//		lp.getLoginButton().click();
+		lp.login(username, password);
 	}
 
 	@AfterMethod
