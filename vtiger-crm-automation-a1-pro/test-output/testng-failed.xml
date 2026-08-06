@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Failed suite [suite]">
-  <test thread-count="5" name="thread2(failed)">
-    <parameter name="bro" value="edge"/>
+<suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
+  <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="typesOfExecution.ContactTest">
+      <class name="advance_reports_listeners.SauceDemoTest">
         <methods>
-          <include name="case11"/>
+          <include name="case2"/>
+          <include name="case3"/>
+          <include name="repBackup"/>
+          <include name="repConfig"/>
         </methods>
-      </class> <!-- typesOfExecution.ContactTest -->
+      </class> <!-- advance_reports_listeners.SauceDemoTest -->
     </classes>
-  </test> <!-- thread2(failed) -->
-</suite> <!-- Failed suite [suite] -->
+  </test> <!-- Default test(failed) -->
+</suite> <!-- Failed suite [Default suite] -->

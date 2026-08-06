@@ -4,10 +4,8 @@ import java.io.IOException;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.testng.Assert;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-
-import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
 
 import base_utility.BaseClass;
 import generic_utility.FileUtility;
@@ -15,6 +13,7 @@ import generic_utility.JavaUtility;
 import object_repository.HomePage;
 import object_repository.OrganizationPage;
 
+@Listeners(listeners_utility.List_Imp.class)
 public class OrgTest extends BaseClass {
 
 	@Test

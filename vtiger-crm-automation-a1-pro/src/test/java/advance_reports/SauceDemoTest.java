@@ -23,8 +23,10 @@ public class SauceDemoTest {
 		spark.config().setDocumentTitle("sauce demo login");
 		spark.config().setReportName("login report");
 		spark.config().setTheme(Theme.DARK);
+		
 		report = new ExtentReports();
 		report.attachReporter(spark);
+		
 		report.setSystemInfo("ATE", "Manisha");
 		report.setSystemInfo("Browser", "edge");
 		report.setSystemInfo("Window", "11");
@@ -33,10 +35,12 @@ public class SauceDemoTest {
 	@Test
 	public void login() throws InterruptedException {
 		ExtentTest test = report.createTest("login");
+		
 		WebDriver driver = new EdgeDriver();
 		driver.get("https://www.saucedemo.com/");
 		Thread.sleep(3000);
 		driver.quit();
+		
 		test.log(Status.PASS, "this is passed...");
 		test.log(Status.INFO, "this is info...");
 	}
@@ -44,10 +48,12 @@ public class SauceDemoTest {
 	@Test
 	public void logout() throws InterruptedException {
 		ExtentTest test = report.createTest("logout");
+		
 		WebDriver driver = new EdgeDriver();
 		driver.get("https://www.saucedemo.com/");
 		Thread.sleep(3000);
 		driver.quit();
+		
 		test.log(Status.FAIL, "this is failed...");
 		test.log(Status.INFO, "this is info...");
 	}

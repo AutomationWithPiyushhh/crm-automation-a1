@@ -3,11 +3,14 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="testng_dp_extra.SauceDemoLogin">
+      <class name="advance_reports_listeners.SauceDemoTest">
         <methods>
-          <include name="login" invocation-numbers="1"/>
+          <include name="case2"/>
+          <include name="case3"/>
+          <include name="repBackup"/>
+          <include name="repConfig"/>
         </methods>
-      </class> <!-- testng_dp_extra.SauceDemoLogin -->
+      </class> <!-- advance_reports_listeners.SauceDemoTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

@@ -26,25 +26,9 @@ import object_repository.LoginPage;
 public class BaseClass {
 
 	public WebDriver driver = null;
-	public ExtentReports report;
 
 	@BeforeSuite
 	public void repConfig() {
-//		report configuration
-//		. means project level
-		
-		long time = System.currentTimeMillis();
-		
-		ExtentSparkReporter spark = new ExtentSparkReporter("./ad_reports/"+time+".html");
-		spark.config().setDocumentTitle("sauce demo login");
-		spark.config().setReportName("login report");
-		spark.config().setTheme(Theme.DARK);
-
-		report = new ExtentReports();
-		report.attachReporter(spark);
-		report.setSystemInfo("ATE", "Manisha");
-		report.setSystemInfo("Browser", "edge");
-		report.setSystemInfo("Window", "11");
 
 	}
 
@@ -108,8 +92,7 @@ public class BaseClass {
 	
 	@AfterSuite
 	public void repBackup() {
-//		report backup
-		report.flush();
+
 	}
 
 }
