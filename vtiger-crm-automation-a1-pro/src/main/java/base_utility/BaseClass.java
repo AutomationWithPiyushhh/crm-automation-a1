@@ -26,6 +26,7 @@ import object_repository.LoginPage;
 public class BaseClass {
 
 	public WebDriver driver = null;
+	public static WebDriver sdriver = null;
 
 	@BeforeSuite
 	public void repConfig() {
@@ -48,6 +49,8 @@ public class BaseClass {
 			driver = new ChromeDriver();
 		}
 
+		sdriver = driver;
+		
 		WebDriverUtility wdUtil = new WebDriverUtility(driver);
 		wdUtil.maximizeWindow();
 		wdUtil.waitForPageLoad();

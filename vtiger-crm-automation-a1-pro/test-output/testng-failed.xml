@@ -3,14 +3,17 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="advance_reports_listeners.SauceDemoTest">
+      <class name="crm.opportunity.OppTest">
         <methods>
-          <include name="case2"/>
-          <include name="case3"/>
+          <include name="logout"/>
+          <include name="createOppTest"/>
+          <include name="setUp"/>
+          <include name="login"/>
           <include name="repBackup"/>
+          <include name="tearDown"/>
           <include name="repConfig"/>
         </methods>
-      </class> <!-- advance_reports_listeners.SauceDemoTest -->
+      </class> <!-- crm.opportunity.OppTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

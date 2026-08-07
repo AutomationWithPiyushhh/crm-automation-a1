@@ -1,7 +1,5 @@
-package listeners_utility;
+package advance_reports_via_listeners;
 
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
 import org.testng.ITestListener;
@@ -13,17 +11,16 @@ import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 
-import base_utility.BaseClass;
-
 public class List_Imp implements ISuiteListener, ITestListener {
-	public ExtentReports report;
-	public ExtentTest test;
+
+	ExtentReports report;
+	ExtentTest test;
 
 	@Override
 	public void onStart(ISuite suite) {
-		long time = System.currentTimeMillis();
-
-		ExtentSparkReporter spark = new ExtentSparkReporter("./ad_reports/" + time + ".html");
+//		report configuration
+//		. means project level
+		ExtentSparkReporter spark = new ExtentSparkReporter("./ad_reports/rep1.html");
 		spark.config().setDocumentTitle("sauce demo login");
 		spark.config().setReportName("login report");
 		spark.config().setTheme(Theme.DARK);
@@ -34,7 +31,12 @@ public class List_Imp implements ISuiteListener, ITestListener {
 		report.setSystemInfo("ATE", "Manisha");
 		report.setSystemInfo("Browser", "edge");
 		report.setSystemInfo("Window", "11");
+	}
 
+	@Override
+	public void onFinish(ISuite suite) {
+//		report backup
+		report.flush();
 	}
 
 	@Override
@@ -45,47 +47,18 @@ public class List_Imp implements ISuiteListener, ITestListener {
 
 	@Override
 	public void onTestSuccess(ITestResult result) {
-		String methodName = result.getMethod().getMethodName();
-		test.log(Status.PASS, methodName + " is passed");
+		test.log(Status.PASS, "this is passed...");
 	}
 
 	@Override
 	public void onTestFailure(ITestResult result) {
-		String methodName = result.getMethod().getMethodName();
-		test.log(Status.FAIL, methodName + " is failed");
+		test.log(Status.FAIL, "this is failed...");
 		
-//		take ss 
-		TakesScreenshot tks = (TakesScreenshot) BaseClass.sdriver;
-		String ss = tks.getScreenshotAs(OutputType.BASE64);
-		
-		test.addScreenCaptureFromBase64String(ss);
 	}
 
 	@Override
 	public void onTestSkipped(ITestResult result) {
-		String methodName = result.getMethod().getMethodName();
-		test.log(Status.SKIP, methodName + " is skipped");
+		test.log(Status.SKIP, "this is skipped...");
 	}
 
-	@Override
-	public void onFinish(ISuite suite) {
-//		report backup
-		report.flush();
-	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
