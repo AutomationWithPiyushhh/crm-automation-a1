@@ -20,6 +20,8 @@ public class SauceDemoTest {
 	public void repConfig() {
 //		report configuration
 //		. means project level
+		
+		
 		ExtentSparkReporter spark = new ExtentSparkReporter("./ad_reports/rep1.html");
 		spark.config().setDocumentTitle("sauce demo login");
 		spark.config().setReportName("login report");
